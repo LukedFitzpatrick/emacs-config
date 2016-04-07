@@ -39,3 +39,18 @@
 
 ;; Make org-mode do indenting rather than multiple asterisks.
 (setq org-startup-indented 1)
+
+;; Make every org file an agenda file
+(setq org-agenda-files '("~/"))
+
+
+;; stuff with the diary display
+
+(setq european-calendar-style t)
+
+(setq view-diary-entries-initially t
+      mark-diary-entries-in-calendar t
+      number-of-diary-entries 7)
+(add-hook 'diary-display-hook 'fancy-diary-display)
+(add-hook 'today-visible-calendar-hook 'calendar-mark-today)
+
