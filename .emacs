@@ -1,25 +1,48 @@
-;; Luke Fitzpatrick's Emacs Configuration File
-
+;; Luke Fitzpatrick's Emacs Configuration
 (require 'package)
+(package-initialize)
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.org/packages/") t)
+(add-to-list 'package-archives
+             '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 
 
-(cua-mode t)         ;; ctrl-c ctrl-v ctrl-x for copy paste cut.
-(menu-bar-mode -1)   ;; no top menu
-(tool-bar-mode -1)   ;; no toolbar brah
-(scroll-bar-mode 0)  ;; no scrollbar brah
 
+; Moe Light Theme 
+; https://github.com/kuanyui/moe-theme.el
+(require 'moe-theme)
+(require 'powerline)
+(setq moe-theme-highlight-buffer-id nil)
+(moe-light)
+(powerline-moe-theme)
+
+
+; Tracking key press frequencies.
+(require 'keyfreq)
+(keyfreq-mode 1)
+(keyfreq-autosave-mode 1)
+
+; Rainbow brackets in programming language modes.
+; Make bracket matches flash and highlight
+(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+(show-paren-mode t)
+(setq show-paren-style 'expression)
+
+
+; Get rid of visual fluff, but put in date and time
+(cua-mode t)           ;; ctrl-c ctrl-v ctrl-x for copy paste cut.
+(menu-bar-mode -1)     ;; no top menu
+(tool-bar-mode -1)     ;; no toolbar brah
+(scroll-bar-mode 0)    ;; no scrollbar brah
+(display-time-mode 1)  ;; show the time in the modeline.
+(setq display-time-day-and-date 2) ;; show the date as well.
+(setq auto-hscroll-mode nil) ;; no auto scrolling.
 
 ;; disable startup messages
 (setq inhibit-startup-message t)
 (setq inhibit-startup-echo-area-message t)
 (setq initial-scratch-message "")
 
-
-;; stop the cursor jumping back to matching parentheses and brackets
-(show-paren-mode 1)
-(setq blink-matching-delay 0.3)
 
 ;; stop temp files from being generated in the project folder
 ;; they're in the OS tmp directory
@@ -30,27 +53,48 @@
 
 
 ;; key rebindings
-;; caps lock is set to control, control is set to alt in the linux settings.
-;; set Ctrl + Spacebar to backspace
-(global-set-key (kbd "C-SPC") 'delete-backward-char)
-;; set Ctrl + t to show the todo items in the current org file.
-(global-set-key (kbd "C-t") 'org-show-todo-tree)
+;; caps lock is set to control in the linux settings.
+
+;; easier undoing
+(global-set-key (kbd "M-u") 'undo)
+;; centre when there's only one buffer open
+(global-set-key (kbd "M-c") 'centered-window-mode)
+
+
+
+;; line duplication with f5
+(defun duplicate-line()
+  (interactive)
+  (move-beginning-of-line 1)
+  (kill-line)
+  (yank)
+  (open-line 1)
+  (next-line 1)
+  (yank)
+)
+(global-set-key (kbd "<f5>") 'duplicate-line)
 
 
 ;; Make org-mode do indenting rather than multiple asterisks.
 (setq org-startup-indented 1)
 
-;; Make every org file an agenda file
-(setq org-agenda-files '("~/"))
+;; shift selection in org mode,
+(setq org-support-shift-select 1)
+
+;; fontify code blocks
+(setq org-src-fontify-natively t)
 
 
-;; stuff with the diary display
+;; fullscreen toggling
+(defun toggle-fullscreen ()
+  "Toggle full screen on X11"
+  (interactive)
+  (when (eq window-system 'x)
+    (set-frame-parameter
+     nil 'fullscreen
+     (when (not (frame-parameter nil 'fullscreen)) 'fullboth))))
 
-(setq european-calendar-style t)
+(global-set-key [f11] 'toggle-fullscreen)
 
-(setq view-diary-entries-initially t
-      mark-diary-entries-in-calendar t
-      number-of-diary-entries 7)
-(add-hook 'diary-display-hook 'fancy-diary-display)
-(add-hook 'today-visible-calendar-hook 'calendar-mark-today)
-
+; by default start with the notes file open
+(find-file "~/notes/notes.org")
