@@ -27,27 +27,33 @@
                    (indent-region (region-beginning) (region-end) nil))))))
 
 
-
-(set-default-font "Fira Code")
  
 (require 'ido)
 (ido-mode t)
 
 
-;; make characters after column 80 be highlighted
+
+
+;;(setq default-tab-width 2)
+
+
+(add-hook 'java-mode-hook (lambda ()
+                            (setq c-basic-offset 2)))
+
+;; make characters after colum 80 be highlighted
 (add-hook 'prog-mode-hook 'column-enforce-mode)
 
 
 ;; for single buffers, centre the text
 ;; (centered-window-mode 1)
-
 (require 'smart-tab)
 (global-smart-tab-mode 1)
 
+
 ; Tracking key press frequencies.
-(require 'keyfreq)
-(keyfreq-mode 1)
-(keyfreq-autosave-mode 1)
+;;(require 'keyfreq)
+;;(keyfreq-mode 1)
+;;(keyfreq-autosave-mode 1)
 
 ; Rainbow brackets in programming language modes.
 ; Make bracket matches flash and highlight
@@ -93,6 +99,11 @@
 ;; Beginning/end of buffer
 (global-set-key (kbd "C-t") 'beginning-of-buffer)
 (global-set-key (kbd "M-t") 'end-of-buffer)
+(global-set-key (kbd "M-a") 'python-indent-shift-left)
+(global-set-key (kbd "M-d") 'python-indent-shift-right)
+
+
+(global-set-key (kbd "<XF86Launch1>") 'save-buffer)
 
 ;; ergonomic enter
 (global-set-key (kbd "C-;") 'newline)
@@ -159,7 +170,7 @@
 
 
 ;; do spaces rather than tabs
-(setq-default indent-tabs-mode nil)
+;;(setq-default indent-tabs-mode nil)
 
 ; by default start with the notes file open
 (find-file "~/notes/notes.org")
@@ -185,3 +196,17 @@
                    name (file-name-nondirectory new-name)))))))
 
 (global-set-key (kbd "C-x C-r") 'rename-current-buffer-file)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (haskell-mode sx column-enforce-mode smart-tab rainbow-delimiters))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-level-1 ((t (:background "#F0F0F0" :foreground "#3C3C3C" :overline "#A7A7A7" :weight bold :height 1.0)))))
